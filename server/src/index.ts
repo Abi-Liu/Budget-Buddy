@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db";
-import transactionsRoutes from "./routes/transactions";
+import plaidRoutes from "./routes/plaid";
 
 dotenv.config();
 
@@ -18,7 +18,9 @@ async function connect() {
 }
 connect();
 
-app.use("/transactions", transactionsRoutes);
+app.use("/plaid", plaidRoutes);
+
+console.log(process.env.PLAID_CLIENT_ID, process.env.PLAID_SECRET);
 
 app.listen(process.env.PORT || 8000, () =>
   console.log(`Server has started on port: ${process.env.PORT}`)

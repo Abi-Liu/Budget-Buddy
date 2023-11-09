@@ -1,26 +1,26 @@
 import { Request, Response } from "express";
-import { plaidClient } from "src/config/plaid";
+import { plaidClient } from "../config/plaid";
 import { CountryCode, Products } from "plaid";
 
-const REDIRECT_URI = process.env.REDIRECT_URI || "http://localhost:5173";
+const REDIRECT_URI = process.env.REDIRECT_URI || "http://localhost:5173/";
 
 export default {
   createLinkToken: async (request: Request, response: Response) => {
     //   Get the client_user_id by searching for the current user);
     const clientUserId = request.body.id;
-    console.log(clientUserId);
+
+    // Configuring plaid request
     const plaidRequest = {
+      // client_id: process.env.PLAID_CLIENT_ID,
+      // secret: process.env.PLAID_SECRET,
       user: {
         client_user_id: clientUserId,
       },
       client_name: "BudgetBuddy",
       products: [
         Products.Transactions,
-        Products.Balance,
         Products.Investments,
         Products.Liabilities,
-        Products.CreditDetails,
-        Products.RecurringTransactions,
       ],
       language: "en",
       redirect_uri: REDIRECT_URI,
