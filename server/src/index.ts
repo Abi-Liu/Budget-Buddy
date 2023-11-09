@@ -1,10 +1,7 @@
 import express, {Request, Response} from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
-import mysql from 'mysql2/promise'
-
-// create the connection to database
-const connection = mysql.createConnection(process.env.DATABASE_URL!)
+import connection from './config/db'
 
 
 dotenv.config()
@@ -15,11 +12,14 @@ app.use(
   );
 app.use(express.json())
 
+
+
+
 app.get('/', async (req: Request, res: Response) => {
     const query = 'select * from Characters;'
-    const data = await connection.query(query)
+    const data = (await connection).execute(query)
     console.log(data)
-    res.send('hello')
+    res.send(data)
 })
 
 app.listen(process.env.PORT || 8000, () => console.log(`Server has started on port: ${process.env.PORT}`))
