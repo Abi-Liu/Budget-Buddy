@@ -1,7 +1,7 @@
 import express, {Request, Response} from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
-import connection from './config/db'
+import connectDB from './config/db'
 
 
 dotenv.config()
@@ -12,12 +12,18 @@ app.use(
   );
 app.use(express.json())
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let connection: any;
 
+async function connect(){
+  connection = await connectDB()
+}
 
+connect()
 
 app.get('/', async (req: Request, res: Response) => {
     const query = 'select * from Characters;'
-    const data = (await connection).execute(query)
+    const data = await connection.execute(query)
     console.log(data)
     res.send(data)
 })
