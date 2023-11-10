@@ -29,6 +29,7 @@ export let connection: any;
 async function connect() {
   connection = await connectDB();
 }
+// creates connection to PlanetScale
 connect();
 
 app.use("/plaid", plaidRoutes);
