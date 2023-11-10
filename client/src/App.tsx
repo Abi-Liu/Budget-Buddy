@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import PlaidLink from "./components/PlaidLink";
-import axiosInstance from "./utils/axios";
+import api from "./utils/axios";
 import Login from "./pages/Login";
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
 
   useEffect(() => {
     async function createLinkToken() {
-      const response = await axiosInstance.post("/plaid/createLinkToken", {
+      const response = await api.post("/plaid/createLinkToken", {
         id: "123842",
       });
       setLinkToken(response.data.link_token);

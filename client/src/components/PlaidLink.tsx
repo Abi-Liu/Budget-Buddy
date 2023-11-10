@@ -5,7 +5,7 @@ import {
   PlaidLinkOnExitMetadata,
   PlaidLinkError,
 } from "react-plaid-link";
-import axiosInstance from "../utils/axios";
+import api from "../utils/axios";
 
 interface Props {
   linkToken: string | null;
@@ -21,7 +21,7 @@ export default function PlaidLink(props: Props) {
   ) => {
     console.log(publicToken);
     console.log(metadata);
-    await axiosInstance.post("/plaid/setAccessToken", { publicToken });
+    await api.post("/plaid/setAccessToken", { publicToken });
   };
 
   const onExit = async (
