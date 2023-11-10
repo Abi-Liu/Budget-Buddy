@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import PlaidLink from "./components/PlaidLink";
 import axiosInstance from "./utils/axios";
+import Login from "./pages/Login";
 
 function App() {
   const [linkToken, setLinkToken] = useState(null);
@@ -18,7 +19,10 @@ function App() {
   }, []);
 
   return linkToken != null ? (
-    <PlaidLink linkToken={linkToken} userId={123421} />
+    <>
+      <Login />
+      <PlaidLink linkToken={linkToken} userId={123421} />
+    </>
   ) : (
     <></>
   );
