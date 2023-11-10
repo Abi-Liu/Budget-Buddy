@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import strategy from "passport-google-oauth20";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import passport from "passport";
 import { connection } from "../index";
 import { User } from "src/interfaces/database";
-
-const GoogleStrategy = strategy.Strategy;
 
 passport.use(
   new GoogleStrategy(
@@ -50,3 +48,5 @@ passport.serializeUser((user: User, done) => {
 passport.deserializeUser((user: User, done) => {
   done(null, user);
 });
+
+export default passport;

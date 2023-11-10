@@ -15,3 +15,5 @@ router.get(
     failureRedirect: "/login/failed",
   })
 );
+
+export default router;

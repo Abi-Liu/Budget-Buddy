@@ -5,8 +5,9 @@ dotenv.config();
 import connectDB from "./config/db";
 import plaidRoutes from "./routes/plaid";
 import cookieSession from "cookie-session";
-import passport from "passport";
+import passport from "./config/passport";
 import transactionsRoutes from "./routes/transactions";
+import authRoutes from "./routes/auth";
 
 const app = express();
 app.use(cors({ origin: ["http://localhost:5173"], credentials: true }));
@@ -33,6 +34,7 @@ async function connect() {
 connect();
 
 app.use("/plaid", plaidRoutes);
+app.use("/auth", authRoutes);
 app.use("/transactions", transactionsRoutes);
 
 app.listen(process.env.PORT || 8000, () =>
