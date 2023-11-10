@@ -2,6 +2,8 @@ import { Configuration, PlaidApi, PlaidEnvironments } from "plaid";
 
 const PLAID_ENV = process.env.PLAID_ENV || "sandbox";
 
+console.log(process.env.PLAID_CLIENT_ID, process.env.PLAID_SECRET);
+
 const configuration = new Configuration({
   basePath: PlaidEnvironments[PLAID_ENV],
   baseOptions: {

@@ -5,9 +5,11 @@ import { CountryCode, Products } from "plaid";
 const REDIRECT_URI = process.env.REDIRECT_URI || "http://localhost:5173/";
 
 export default {
+  // start the link flow by sending client a public token.
+  // They can then use that public token to request for an access token that will allow us to connect their accounts
   createLinkToken: async (request: Request, response: Response) => {
     //   Get the client_user_id by searching for the current user);
-    const clientUserId = request.body.id;
+    const clientUserId = "12312312";
 
     // Configuring plaid request
     const plaidRequest = {
@@ -17,15 +19,10 @@ export default {
         client_user_id: clientUserId,
       },
       client_name: "BudgetBuddy",
-      products: [
-        Products.Transactions,
-        Products.Investments,
-        Products.Liabilities,
-      ],
+      products: [Products.Transactions],
       language: "en",
       redirect_uri: REDIRECT_URI,
       country_codes: [CountryCode.Us],
-      link_customization_name: "Budget Buddy",
     };
     try {
       const createTokenResponse = await plaidClient.linkTokenCreate(
@@ -33,8 +30,27 @@ export default {
       );
       response.status(200).json(createTokenResponse.data);
     } catch (error) {
-      console.error(error);
+      console.error(error.response.data);
       response.status(500).send("failure");
+    }
+  },
+  // Exchange token flow - exchange a Link public_token for
+  // an API access_token
+  setAccessToken: async (req: Request, res: Response) => {
+    const publicToken = req.body.publicToken;
+    console.log(req.body, "request");
+
+    try {
+      const tokenResponse = await plaidClient.itemPublicTokenExchange({
+        public_token: publicToken,
+      });
+      // store these in a database
+      const accessToken = tokenResponse.data.access_token;
+      const itemId = tokenResponse.data.item_id;
+      console.log(tokenResponse.data, "response");
+    } catch (error) {
+      console.log(error.response.data);
+      res.status(500).send("Exchange Failed");
     }
   },
 };

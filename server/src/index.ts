@@ -1,10 +1,9 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+dotenv.config();
 import connectDB from "./config/db";
 import plaidRoutes from "./routes/plaid";
-
-dotenv.config();
 
 const app = express();
 app.use(cors({ origin: ["http://localhost:5173"], credentials: true }));
@@ -19,8 +18,6 @@ async function connect() {
 connect();
 
 app.use("/plaid", plaidRoutes);
-
-console.log(process.env.PLAID_CLIENT_ID, process.env.PLAID_SECRET);
 
 app.listen(process.env.PORT || 8000, () =>
   console.log(`Server has started on port: ${process.env.PORT}`)

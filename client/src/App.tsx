@@ -1,14 +1,27 @@
+import { useEffect, useState } from "react";
+import PlaidLink from "./components/PlaidLink";
 import axiosInstance from "./utils/axios";
 
 function App() {
-  async function createLinkToken() {
-    const publicToken = await axiosInstance.post("/plaid/createLinkToken", {
-      id: "uuid123842",
-    });
-    console.log(publicToken);
-  }
+  const [linkToken, setLinkToken] = useState(null);
+  console.log(linkToken);
 
-  return <button onClick={createLinkToken}>Create Link Token</button>;
+  useEffect(() => {
+    async function createLinkToken() {
+      const response = await axiosInstance.post("/plaid/createLinkToken", {
+        id: "123842",
+      });
+      setLinkToken(response.data.link_token);
+    }
+
+    createLinkToken();
+  }, []);
+
+  return linkToken != null ? (
+    <PlaidLink linkToken={linkToken} userId={123421} />
+  ) : (
+    <></>
+  );
 }
 
 export default App;
