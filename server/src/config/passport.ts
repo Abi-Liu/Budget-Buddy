@@ -4,14 +4,16 @@ import passport from "passport";
 import { connection } from "../index";
 import { User } from "src/interfaces/database";
 
+const callbackURL = `${
+  process.env.CALLBACKURL || "http://localhost:8000"
+}/auth/google/callback`;
+
 passport.use(
   new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_SECRET!,
-      callbackURL:
-        `${process.env.CALLBACKURL}/auth/google/callback` ||
-        "http://localhost:5173/auth/google/callback",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      callbackURL,
     },
     async function (
       accessToken: any,
@@ -20,7 +22,7 @@ passport.use(
       cb: any
     ) {
       try {
-        const query = "SELECT * from Users WHERE google_id = $1;";
+        const query = "SELECT * from Users WHERE google_id = ?;";
         const values = [profile.id];
         let [user] = await connection.query(query, values);
         if (user.length === 0) {

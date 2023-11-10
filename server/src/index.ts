@@ -1,10 +1,10 @@
-import express from "express";
-import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
+import express from "express";
+import cors from "cors";
 import connectDB from "./config/db";
 import plaidRoutes from "./routes/plaid";
-import cookieSession from "cookie-session";
+import session from "express-session"; // Import express-session
 import passport from "./config/passport";
 import transactionsRoutes from "./routes/transactions";
 import authRoutes from "./routes/auth";
@@ -12,12 +12,16 @@ import authRoutes from "./routes/auth";
 const app = express();
 app.use(cors({ origin: ["http://localhost:5173"], credentials: true }));
 app.use(express.json());
+
+// Use express-session
 app.use(
-  cookieSession({
-    name: "session",
-    keys: [process.env.KEY || "secret"],
-    // sets cookie age to 2 weeks
-    maxAge: 14 * 24 * 60 * 60 * 1000,
+  session({
+    secret: process.env.SESSION_SECRET || "secret", // Set a secret key for session
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 14 * 24 * 60 * 60 * 1000, // 2 weeks
+    },
   })
 );
 
