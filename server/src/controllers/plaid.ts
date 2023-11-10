@@ -46,7 +46,7 @@ export default {
       const accessToken = tokenResponse.data.access_token;
       const itemId = tokenResponse.data.item_id;
       // db query
-      createItem(userId, accessToken, itemId, institutionId);
+      await createItem(userId, accessToken, itemId, institutionId);
     } catch (error) {
       console.log(error.response.data);
       res.status(500).send("Exchange Failed");

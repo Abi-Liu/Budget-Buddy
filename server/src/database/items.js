@@ -1,4 +1,6 @@
-import connection from "../index";
+import { connection } from "../index";
+
+// mysql db queries specific for plaid_item functionality.
 
 export async function createItem(userId, accessToken, itemId, institutionId) {
   const query =
