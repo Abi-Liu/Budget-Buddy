@@ -4,6 +4,8 @@ import passport from "passport";
 import { connection } from "../index";
 import { User } from "src/interfaces/database";
 
+// Passport configuration
+
 const callbackURL = `${
   process.env.CALLBACKURL || "http://localhost:8000"
 }/auth/google/callback`;
@@ -24,7 +26,9 @@ passport.use(
       try {
         const query = "SELECT * from Users WHERE google_id = ?;";
         const values = [profile.id];
+        console.log("Executing select query...");
         let [user] = await connection.query(query, values);
+        console.log("Select query result:", user);
         if (user.length === 0) {
           const insert =
             "INSERT INTO Users (google_id, first_name, last_name, avatar_url) VALUES (?, ?, ?, ?);";
@@ -34,7 +38,9 @@ passport.use(
             profile.name.familyName,
             profile.photos[0].value,
           ];
+          console.log("Executing insert query...");
           [user] = await connection.query(insert, values);
+          console.log("Insert query result:", user);
         }
         cb(null, user);
       } catch (error) {

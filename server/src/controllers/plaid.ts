@@ -13,8 +13,6 @@ export default {
 
     // Configuring plaid request
     const plaidRequest = {
-      // client_id: process.env.PLAID_CLIENT_ID,
-      // secret: process.env.PLAID_SECRET,
       user: {
         client_user_id: clientUserId,
       },
