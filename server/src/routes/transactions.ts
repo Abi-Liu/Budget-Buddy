@@ -3,10 +3,10 @@ import { connection } from "../index";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const query = "select * from Characters;";
-  const data = await connection.execute(query);
-  console.log(data);
-  res.send(data);
+  const query = "select * from Users;";
+  const [rows] = await connection.execute(query);
+  console.log(rows);
+  res.send(rows);
 });
 
 export default router;
