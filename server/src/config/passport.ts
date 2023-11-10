@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import passport from "passport";
-import { connection } from "../index";
+import { getUser, createUser } from "../database/users";
 import { User } from "src/interfaces/database";
 
 // Passport configuration
@@ -24,23 +24,14 @@ passport.use(
       cb: any
     ) {
       try {
-        const query = "SELECT * from Users WHERE google_id = ?;";
-        const values = [profile.id];
-        console.log("Executing select query...");
-        let [user] = await connection.query(query, values);
-        console.log("Select query result:", user);
+        let user = await getUser(profile.id);
         if (user.length === 0) {
-          const insert =
-            "INSERT INTO Users (google_id, first_name, last_name, avatar_url) VALUES (?, ?, ?, ?);";
-          const values = [
+          user = await createUser(
             profile.id,
             profile.name.givenName,
             profile.name.familyName,
-            profile.photos[0].value,
-          ];
-          console.log("Executing insert query...");
-          [user] = await connection.query(insert, values);
-          console.log("Insert query result:", user);
+            profile.photos[0].value
+          );
         }
         cb(null, user);
       } catch (error) {
