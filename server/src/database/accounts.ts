@@ -28,7 +28,7 @@ export async function createOrUpdateAccounts(
     // if it is already inside the database, we only need to update the current and available balance rows
     const query = `INSERT INTO Account (
             item_id
-            plaid_account_id,
+            account_id,
             name,
             mask,
             official_name,
@@ -56,8 +56,17 @@ export async function createOrUpdateAccounts(
       type,
       subtype,
     ];
-    const [res] = connection.query(query, values);
-    return res;
+    const [rows] = connection.query(query, values);
+    return rows;
   });
   return await Promise.all(queries);
+}
+
+// Get account by account id
+export async function getAccountByAccountId(id: string) {
+  const query = `SELECT * FROM Account WHERE account_id = ?`;
+  const values = [id];
+  const [rows] = await connection.query(query, values);
+  console.log(rows);
+  return rows;
 }
