@@ -1,6 +1,14 @@
+import { createOrUpdateAccounts } from "src/database/accounts";
 import { plaidClient } from "../config/plaid";
-import { getItemsByItemId } from "../database/items";
+import {
+  getItemsByItemId,
+  updateItemTransactionCursor,
+} from "../database/items";
 import { TransactionsSyncResponse } from "plaid";
+import {
+  createOrUpdateTransactions,
+  deleteTransactions,
+} from "../database/transactions";
 
 export async function fetchTransactionUpdates(plaidItemId: string) {
   // get the access token and cursor based on the plaid item id
@@ -9,7 +17,7 @@ export async function fetchTransactionUpdates(plaidItemId: string) {
     last_transactions_update_cursor: lastCursor,
   } = await getItemsByItemId(plaidItemId);
 
-  let cursor: string | null = lastCursor;
+  let cursor: typeof lastCursor = lastCursor;
 
   // added/modified/removed transactions since last cursor
   let added: TransactionsSyncResponse["added"] = [];
@@ -54,4 +62,18 @@ export async function updateTransactions(plaidItemId: string) {
 
   // gets the accounts linked to an item
   const { data } = await plaidClient.accountsGet(request);
+  const accounts = data.accounts;
+
+  // update the DB
+  // updates or creates all accounts linked to the item
+  await createOrUpdateAccounts(plaidItemId, accounts);
+  await createOrUpdateTransactions(added, modified);
+  await deleteTransactions(removed);
+  await updateItemTransactionCursor(plaidItemId, cursor);
+
+  return {
+    addedCount: added.length,
+    modifiedCount: modified.length,
+    removedCount: removed.length,
+  };
 }

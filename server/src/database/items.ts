@@ -23,3 +23,12 @@ export async function getItemsByItemId(itemId: string) {
   const [rows] = await connection.query(query, values);
   return rows;
 }
+
+export async function updateItemTransactionCursor(
+  itemId: string,
+  cursor: string | undefined
+) {
+  const query = `UPDATE Plaid_Items SET transactions_cursor = ? WHERE item_id = ? `;
+  const values = [cursor, itemId];
+  await connection.query(query, values);
+}

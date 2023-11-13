@@ -12,6 +12,9 @@ export default {
     //   Get the client_user_id by searching for the current user);
     const clientUserId = request.body.id;
 
+    const webhookUrl =
+      process.env.WEBHOOK_URL || "http://localhost:8000/webhook";
+
     // Configuring plaid request
     const plaidRequest = {
       user: {
@@ -22,6 +25,7 @@ export default {
       language: "en",
       redirect_uri: REDIRECT_URI,
       country_codes: [CountryCode.Us],
+      webhook: webhookUrl,
     };
     try {
       const createTokenResponse = await plaidClient.linkTokenCreate(

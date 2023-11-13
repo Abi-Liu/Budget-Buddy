@@ -73,3 +73,14 @@ export async function createOrUpdateTransactions(
   });
   return await Promise.all(queries);
 }
+
+export async function deleteTransactions(
+  transactionIds: TransactionsSyncResponse["removed"]
+) {
+  const queries = transactionIds.map(async (transactionId) => {
+    const query = `DELETE FROM Transactions WHERE plaid_transaction_id = ?`;
+    const values = [transactionId];
+    await connection.query(query, values);
+  });
+  await Promise.all(queries);
+}
