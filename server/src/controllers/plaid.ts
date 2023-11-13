@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { plaidClient } from "../config/plaid";
 import { CountryCode, Products } from "plaid";
 import { createItem } from "../database/items";
+import { updateTransactions } from "../utils/updateTransactions";
 
 const REDIRECT_URI = process.env.REDIRECT_URI || "http://localhost:5173/";
 
@@ -50,7 +51,15 @@ export default {
       const accessToken = tokenResponse.data.access_token;
       const itemId = tokenResponse.data.item_id;
       // db query
-      await createItem(userId, accessToken, itemId, institutionId);
+      const [item] = await createItem(
+        userId,
+        accessToken,
+        itemId,
+        institutionId
+      );
+
+      await updateTransactions(itemId);
+      res.json(item);
     } catch (error) {
       console.log(error.response.data);
       res.status(500).send("Exchange Failed");

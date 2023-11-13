@@ -1,4 +1,4 @@
-import { createOrUpdateAccounts } from "src/database/accounts";
+import { createOrUpdateAccounts } from "../database/accounts";
 import { plaidClient } from "../config/plaid";
 import {
   getItemsByItemId,
